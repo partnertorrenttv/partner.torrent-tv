@@ -15,7 +15,7 @@ class PartnerApi
     /**
      * Базовая URI для выполнения запросов.
      */
-    const BASE_URI = 'http://partner.torrent-tv.ru/api/';
+    const BASE_URI = 'http://partner.torrent-tv.ru.dev/api/';
 
     /**
      * Формат плейлиста M3U.
@@ -53,7 +53,7 @@ class PartnerApi
      */
     public function addUser($user, $notes)
     {
-        return $this->sendRequest('user_add', ['user' => $user, 'notes' => $notes]);
+        return $this->sendRequest('user_add', ['user' => $user, 'notes' => $notes, 'hash' => $this->hashParams(['user' => $user])]);
     }
 
     /**
@@ -143,6 +143,7 @@ class PartnerApi
             'format' => $format,
             // Hash params is different for this method
             'hash' => $this->hashParams(['user' => $user]),
+            'typeresult' => 'json',
         ]);
     }
 
@@ -170,16 +171,19 @@ class PartnerApi
         ]);
 
         $json = json_decode($response->getBody(), true);
+
         if ($json === null) {
             throw new BadResponseException('Unable to decode json response', $request, $response);
         }
         if (!empty($json['error'])) {
             throw new ApiException($json['error'], $request, $response);
         }
-        if (!isset($json['success']) || $json['success'] != 1) {
-            throw new ApiException('n/a', $request, $response);
-        }
-
+        if (isset($json['success']) == 1){
+            return isset($json['success']) ? $json['success'] : null;
+        };
+        if (isset($json['data']) == 1){
+            return isset($json['data']) ? $json['data'] : null;
+        };
         return isset($json['data']) ? $json['data'] : null;
     }
 
