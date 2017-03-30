@@ -15,7 +15,7 @@ class PartnerApi
     /**
      * Базовая URI для выполнения запросов.
      */
-    const BASE_URI = 'http://partner.torrent-tv.ru.dev/api/';
+    const BASE_URI = 'http://partner.torrent-tv.ru/api/';
 
     /**
      * Формат плейлиста M3U.
